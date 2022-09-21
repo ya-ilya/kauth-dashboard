@@ -1,0 +1,19 @@
+### IDEA ###
+.idea
+
+### CMake ###
+cmake-build-debug
+CMakeFiles
+_CPack_Packages
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cmake_install.cmake
+install_manifest.txt
+Makefile
+_deps
+
+### Other ###
+kauth-dashboard
+*.deb
+hs_err_*.log
