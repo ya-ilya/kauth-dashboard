@@ -36,7 +36,7 @@ public:
 
     ApplicationUser GetApplicationUser(const string &applicationId, const string &user_id) const;
 
-    std::vector <ApplicationUser> GetApplicationUsers(const string &applicationId) const;
+    std::vector<ApplicationUser> GetApplicationUsers(const string &applicationId) const;
 
     ApplicationUser CreateApplicationUser(const string &applicationId, const string &key, const string &hwid) const;
 

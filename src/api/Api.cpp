@@ -34,7 +34,8 @@ Api Api::Login(const string &host, const string &email, const string &password) 
 
 Api Api::Register(const string &host, const string &email, const string &username,
                   const string &password) {
-    auto response = Get(Url{host + "/register?email=" + email + "&username=" + username + "&password=" + password}, Timeout{2000});
+    auto response = Get(Url{host + "/register?email=" + email + "&username=" + username + "&password=" + password},
+                        Timeout{2000});
     CheckResponse(response);
     Api api;
     api.host = host;
@@ -43,7 +44,8 @@ Api Api::Register(const string &host, const string &email, const string &usernam
 }
 
 bool Api::Validate(const string &host, const string &applicationId, const string &key, const string &hwid) {
-    auto response = Get(Url{host + "/validate?application_id=" + applicationId + "&key=" + key + "&hwid=" + hwid}, Timeout{2000});
+    auto response = Get(Url{host + "/validate?application_id=" + applicationId + "&key=" + key + "&hwid=" + hwid},
+                        Timeout{2000});
     CheckResponse(response);
     return json::parse(response.text).at("valid").get<bool>();
 }

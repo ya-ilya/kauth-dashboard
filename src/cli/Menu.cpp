@@ -48,7 +48,7 @@ void Menu::TryExecute(const std::vector<std::string> &args) const {
 
             try {
                 command.execute(Skip(args, 1));
-            } catch (std::exception ex) {
+            } catch (std::exception &ex) {
                 cout << "E: << " << ex.what() << endl;
             }
         }
