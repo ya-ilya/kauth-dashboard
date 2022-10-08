@@ -14,8 +14,16 @@ cmake_install.cmake
 install_manifest.txt
 Makefile
 _deps
+lib
 
 ### Other ###
-kauth-dashboard
-*.deb
 hs_err_*.log
+*.a
+*.so
+*.so.1
+*.lib
+*.dll
+*.pc
+*.pc.in
+kauth-dashboard
+kauth-dashboard-0.1-Linux.deb

@@ -28,8 +28,13 @@ FetchContent_Declare(json GIT_REPOSITORY https://github.com/nlohmann/json.git
         GIT_TAG bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d) # Release 3.11.2
 FetchContent_MakeAvailable(json)
 
+FetchContent_Declare(libcli GIT_REPOSITORY https://github.com/ya-ilya/libcli.git
+        GIT_TAG origin) # Latest Release
+FetchContent_MakeAvailable(libcli)
+
 target_link_libraries(kauth-dashboard PRIVATE cpr::cpr)
 target_link_libraries(kauth-dashboard PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(kauth-dashboard PRIVATE libcli::libcli)
 
 set(CPACK_PACKAGE_VERSION 0.1)
 set(CPACK_PACKAGE_VENDOR ya-ilya)

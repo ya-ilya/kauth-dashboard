@@ -1,9 +1,6 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-convert-member-functions-to-static"
-
 #include "ApplicationUser.h"
 
-ApplicationUser ApplicationUser::Parse(const json &json) {
+ApplicationUser ApplicationUser::Parse(const json& json) {
     ApplicationUser out;
 
     json.at("id").get_to(out.id);
@@ -13,5 +10,3 @@ ApplicationUser ApplicationUser::Parse(const json &json) {
 
     return out;
 }
-
-#pragma clang diagnostic pop

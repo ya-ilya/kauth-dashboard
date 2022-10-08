@@ -1,5 +1,5 @@
-#ifndef DASHBOARD_API_H
-#define DASHBOARD_API_H
+#ifndef KAUTH_DASHBOARD_API_H
+#define KAUTH_DASHBOARD_API_H
 
 #include <iostream>
 #include "models/Application.h"
@@ -9,54 +9,53 @@
 
 using namespace cpr;
 using json = nlohmann::json;
-using std::string;
 
 struct Api {
-    string token;
-    string host;
+    std::string token;
+    std::string host;
 
 public:
-    static void CheckResponse(const Response &response);
+    static void CheckResponse(const Response& response);
 
-    static Api Login(const string &host, const string &email, const string &password);
+    static Api Login(const std::string& host, const std::string& email, const std::string& password);
 
-    static Api Register(const string &host, const string &email, const string &username, const string &password);
+    static Api Register(const std::string& host, const std::string& email, const std::string& username, const std::string& password);
 
-    static bool Validate(const string &host, const string &applicationId, const string &key, const string &hwid);
+    static bool Validate(const std::string& host, const std::string& applicationId, const std::string& key, const std::string& hwid);
 
-    Application GetApplication(const string &applicationId) const;
+    Application GetApplication(const std::string& applicationId) const;
 
     std::vector<Application> GetApplications() const;
 
-    Application CreateApplication(const string &name) const;
+    Application CreateApplication(const std::string& name) const;
 
-    Application UpdateApplication(const string &applicationId, const string &name) const;
+    Application UpdateApplication(const std::string& applicationId, const std::string& name) const;
 
-    void DeleteApplication(const string &applicationId) const;
+    void DeleteApplication(const std::string& applicationId) const;
 
-    ApplicationUser GetApplicationUser(const string &applicationId, const string &user_id) const;
+    ApplicationUser GetApplicationUser(const std::string& applicationId, const std::string& user_id) const;
 
-    std::vector<ApplicationUser> GetApplicationUsers(const string &applicationId) const;
+    std::vector<ApplicationUser> GetApplicationUsers(const std::string& applicationId) const;
 
-    ApplicationUser CreateApplicationUser(const string &applicationId, const string &key, const string &hwid) const;
+    ApplicationUser CreateApplicationUser(const std::string& applicationId, const std::string& key, const std::string& hwid) const;
 
-    ApplicationUser UpdateApplicationUser(const string &applicationId, const string &user_id, const string &key,
-                                          const string &hwid) const;
+    ApplicationUser UpdateApplicationUser(const std::string& applicationId, const std::string& user_id, const std::string& key,
+                                          const std::string& hwid) const;
 
-    void DeleteApplicationUser(const string &applicationId, const string &user_id) const;
+    void DeleteApplicationUser(const std::string& applicationId, const std::string& user_id) const;
 
-    json MakeRequest(const string &type, const std::map<string, string> &params = {}) const;
+    json MakeRequest(const std::string& type, const std::map<std::string, std::string>& params = {}) const;
 };
 
 class ApiException : public std::runtime_error {
 public:
-    string error;
-    string message;
+    std::string error;
+    std::string message;
 
-    ApiException(const string &error, const string &message) : std::runtime_error(error + ". " + message) {
+    ApiException(const std::string& error, const std::string& message) : std::runtime_error(error + ". " + message) {
         this->error = error;
         this->message = message;
     }
 };
 
-#endif //DASHBOARD_API_H
+#endif //KAUTH_DASHBOARD_API_H
