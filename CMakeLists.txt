@@ -36,13 +36,13 @@ target_link_libraries(kauth-dashboard PRIVATE cpr::cpr)
 target_link_libraries(kauth-dashboard PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(kauth-dashboard PRIVATE libcli::libcli)
 
+include(CPack)
+
 set(CPACK_PACKAGE_VERSION 0.1)
 set(CPACK_PACKAGE_VENDOR ya-ilya)
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Dashboard for kauth")
 set(CPACK_PACKAGE_DESCRIPTION "kauth-dashboard is dashboard for kauth")
 set(CPACK_PACKAGE_CONTACT https://github.com/ya-ilya/kauth-dashboard/issues)
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_LIST_DIR}/README.md")
 
 if(UNIX)
     install(TARGETS ${PROJECT_NAME}
@@ -54,5 +54,3 @@ else()
     install(TARGETS ${PROJECT_NAME}
             RUNTIME DESTINATION bin)
 endif()
-
-include(CPack)

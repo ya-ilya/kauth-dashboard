@@ -1,6 +1,5 @@
 #include <iostream>
 #include <libcli/libcli.h>
-#include "api/models/Application.h"
 #include "api/Api.h"
 
 using namespace libcli;
