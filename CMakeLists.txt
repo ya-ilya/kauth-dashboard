@@ -14,9 +14,7 @@ add_executable(kauth-dashboard
         src/api/models/ApplicationUser.cpp
         src/api/models/Application.h
         src/api/models/ApplicationUser.h
-        src/api/Api.h src/api/Api.cpp
-        src/cli/Command.cpp src/cli/Command.h
-        src/cli/Menu.cpp src/cli/Menu.h)
+        src/api/Api.h src/api/Api.cpp)
 
 include(FetchContent)
 
