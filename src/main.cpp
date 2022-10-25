@@ -23,6 +23,13 @@ int main() {
     });
 
     application.AddCommand("getusers", "", "List of application users", [&api, &application_id](const auto& args) {
+        const auto users = api.GetApplicationUsers(application_id);
+
+        if (users.empty()) {
+            std::cout << "Application doesn't have users" << std::endl;
+            return;
+        }
+
         for (const auto& user : api.GetApplicationUsers(application_id)) {
             std::cout << "----------------------------" << std::endl;
             std::cout << "User ID: " << user.id << std::endl;
@@ -68,6 +75,62 @@ int main() {
             std::cout << "User" << args[0] << " was deleted" << std::endl;
         } catch (const ApiException& ex) {
             std::cout << "User not found" << std::endl;
+        }
+    });
+
+    application.AddCommand("getwebhooks", "", "List of application webhooks", [&api, &application_id](const auto& args) {
+        const auto webhooks = api.GetApplicationWebhooks(application_id);
+
+        if (webhooks.empty()) {
+            std::cout << "Application doesn't have webhooks" << std::endl;
+            return;
+        }
+
+        for (const auto& webhook : api.GetApplicationWebhooks(application_id)) {
+            std::cout << "----------------------------" << std::endl;
+            std::cout << "Webhook ID: " << webhook.id << std::endl;
+            std::cout << "Webhook Trigger: " << webhook.trigger << std::endl;
+            std::cout << "Webhook Url: " << webhook.url << std::endl;
+            std::cout << "----------------------------" << std::endl;
+        }
+    });
+
+    application.AddCommand("getwebhook", "<webhook_id>", "Get webhook by it's id", [&api, &application_id](const auto& args) {
+        try {
+            const auto& webhook = api.GetApplicationWebhook(application_id, args[0]);
+
+            std::cout << "----------------------------" << std::endl;
+            std::cout << "User ID: " << webhook.id << std::endl;
+            std::cout << "User Trigger: " << webhook.trigger << std::endl;
+            std::cout << "User Url: " << webhook.url << std::endl;
+            std::cout << "----------------------------" << std::endl;
+        } catch (const ApiException& ex) {
+            std::cout << "Webhook not found" << std::endl;
+        }
+    });
+
+    application.AddCommand("createwebhook", "<trigger> <url>", "Create webhook with specifed trigger and url", [&api, &application_id](const auto& args) {
+        const auto& webhook = api.CreateApplicationWebhook(application_id, args[0], args[1]);
+
+        std::cout << "Webhook with trigger " << webhook.trigger << ", url " << webhook.url << " created. ID: " << webhook.id << std::endl;
+    });
+
+    application.AddCommand("updatewebhook", "<webhook_id> <trigger> <url>", "Update webhook trigger and url", [&api, &application_id](const auto& args) {
+        try {
+            const auto& webhook = api.UpdateApplicationWebhook(application_id, args[0], args[1], args[2]);
+            std::cout << "Webhook " << webhook.id << " was updated" << std::endl;
+        } catch (const ApiException& ex) {
+            std::cout << "Webhook not found" << std::endl;
+        }
+    });
+
+    application.AddCommand("deletewebhook", "<webhook_id>", "Delete webhook by it's id", [&api, &application_id](const auto& args) {
+        try {
+            api.DeleteApplicationWebhook(application_id, args[0]);
+
+            std::cout << "Webhook" << args[0] << " was deleted" << std::endl;
+        } catch (const ApiException& ex) {
+            std::cout << "Webhook not found" << std::endl;
         }
     });
 
@@ -135,9 +198,13 @@ int main() {
         }
     });
 
-    account.AddCommand("applicationmenu", "<application_id>", "Open application menu_name", [&cli, &application_id](const auto& args) {
-        application_id = args[0];
-        cli.SelectMenu("application");
+    account.AddCommand("applicationmenu", "<application_id>", "Open application menu_name", [&cli, &api, &application_id](const auto& args) {
+        try {
+            application_id = api.GetApplication(args[0]).id;
+            cli.SelectMenu("application");
+        } catch (ApiException& ex) {
+            std::cout << "Application not found" << std::endl;
+        }
     });
     /** END ACCOUNT **/
 

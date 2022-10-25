@@ -4,6 +4,7 @@
 #include <iostream>
 #include "models/Application.h"
 #include "models/ApplicationUser.h"
+#include "models/ApplicationWebhook.h"
 #include "cpr/cpr.h"
 #include "nlohmann/json.hpp"
 
@@ -33,16 +34,27 @@ public:
 
     void DeleteApplication(const std::string& applicationId) const;
 
-    ApplicationUser GetApplicationUser(const std::string& applicationId, const std::string& user_id) const;
+    ApplicationUser GetApplicationUser(const std::string& applicationId, const std::string& userId) const;
 
     std::vector<ApplicationUser> GetApplicationUsers(const std::string& applicationId) const;
 
     ApplicationUser CreateApplicationUser(const std::string& applicationId, const std::string& key, const std::string& hwid) const;
 
-    ApplicationUser UpdateApplicationUser(const std::string& applicationId, const std::string& user_id, const std::string& key,
+    ApplicationUser UpdateApplicationUser(const std::string& applicationId, const std::string& userId, const std::string& key,
                                           const std::string& hwid) const;
 
-    void DeleteApplicationUser(const std::string& applicationId, const std::string& user_id) const;
+    void DeleteApplicationUser(const std::string& applicationId, const std::string& userId) const;
+
+    ApplicationWebhook GetApplicationWebhook(const std::string& applicationId, const std::string& webhookId) const;
+
+    std::vector<ApplicationWebhook> GetApplicationWebhooks(const std::string& applicationId) const;
+
+    ApplicationWebhook CreateApplicationWebhook(const std::string& applicationId, const std::string& trigger, const std::string& url) const;
+
+    ApplicationWebhook UpdateApplicationWebhook(const std::string& applicationId, const std::string& webhookId, const std::string& trigger,
+                                                const std::string& url) const;
+
+    void DeleteApplicationWebhook(const std::string& applicationId, const std::string& webhookId) const;
 
     json MakeRequest(const std::string& type, const std::map<std::string, std::string>& params = {}) const;
 };

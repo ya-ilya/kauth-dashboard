@@ -14,6 +14,8 @@ add_executable(kauth-dashboard
         src/api/models/ApplicationUser.cpp
         src/api/models/Application.h
         src/api/models/ApplicationUser.h
+        src/api/models/ApplicationWebhook.h
+        src/api/models/ApplicationWebhook.cpp
         src/api/Api.h src/api/Api.cpp)
 
 include(FetchContent)
@@ -34,7 +36,7 @@ target_link_libraries(kauth-dashboard PRIVATE cpr::cpr)
 target_link_libraries(kauth-dashboard PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(kauth-dashboard PRIVATE libcli::libcli)
 
-set(CPACK_PACKAGE_VERSION 0.1)
+set(CPACK_PACKAGE_VERSION 0.1.1)
 set(CPACK_PACKAGE_VENDOR ya-ilya)
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Dashboard for kauth")
 set(CPACK_PACKAGE_DESCRIPTION "kauth-dashboard is dashboard for kauth")

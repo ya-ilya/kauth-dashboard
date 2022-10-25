@@ -16,4 +16,4 @@ public:
     static ApplicationUser Parse(const json& json);
 };
 
-#endif //DASHBOARD_APPLICATIONUSER_H
+#endif //KAUTH_DASHBOARD_APPLICATIONUSER_H

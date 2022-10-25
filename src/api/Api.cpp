@@ -83,10 +83,10 @@ void Api::DeleteApplication(const std::string& applicationId) const {
     MakeRequest("delete_application", {{"application_id", applicationId}});
 }
 
-ApplicationUser Api::GetApplicationUser(const std::string& applicationId, const std::string& user_id) const {
+ApplicationUser Api::GetApplicationUser(const std::string& applicationId, const std::string& userId) const {
     return ApplicationUser::Parse(MakeRequest("get_application_user", {
             {"application_id", applicationId},
-            {"user_id",        user_id}
+            {"user_id",        userId}
     }));
 }
 
@@ -108,20 +108,62 @@ ApplicationUser Api::CreateApplicationUser(const std::string& applicationId, con
     }));
 }
 
-ApplicationUser Api::UpdateApplicationUser(const std::string& applicationId, const std::string& user_id, const std::string& key,
+ApplicationUser Api::UpdateApplicationUser(const std::string& applicationId, const std::string& userId, const std::string& key,
                                            const std::string& hwid) const {
     return ApplicationUser::Parse(MakeRequest("update_application_user", {
             {"application_id", applicationId},
-            {"user_id",        user_id},
+            {"user_id",        userId},
             {"key",            key},
             {"hwid",           hwid}
     }));
 }
 
-void Api::DeleteApplicationUser(const std::string& applicationId, const std::string& user_id) const {
+void Api::DeleteApplicationUser(const std::string& applicationId, const std::string& userId) const {
     MakeRequest("delete_application_user", {
             {"application_id", applicationId},
-            {"user_id",        user_id}
+            {"user_id",        userId}
+    });
+}
+
+ApplicationWebhook Api::GetApplicationWebhook(const std::string& applicationId, const std::string& webhookId) const {
+    return ApplicationWebhook::Parse(MakeRequest("get_application_webhook", {
+            {"application_id", applicationId},
+            {"webhook_id",     webhookId}
+    }));
+}
+
+std::vector<ApplicationWebhook> Api::GetApplicationWebhooks(const std::string& applicationId) const {
+    std::vector<ApplicationWebhook> out = {};
+
+    for (const auto& userJson : MakeRequest("get_application_webhooks", {{"application_id", applicationId}})) {
+        out.push_back(ApplicationWebhook::Parse(userJson));
+    }
+
+    return out;
+}
+
+ApplicationWebhook Api::CreateApplicationWebhook(const std::string& applicationId, const std::string& trigger, const std::string& url) const {
+    return ApplicationWebhook::Parse(MakeRequest("create_application_webhook", {
+            {"application_id", applicationId},
+            {"trigger",        trigger},
+            {"url",            url}
+    }));
+}
+
+ApplicationWebhook Api::UpdateApplicationWebhook(const std::string& applicationId, const std::string& webhookId, const std::string& trigger,
+                                                 const std::string& url) const {
+    return ApplicationWebhook::Parse(MakeRequest("update_application_webhook", {
+            {"application_id", applicationId},
+            {"webhook_id",     webhookId},
+            {"trigger",        trigger},
+            {"url",            url}
+    }));
+}
+
+void Api::DeleteApplicationWebhook(const std::string& applicationId, const std::string& webhookId) const {
+    MakeRequest("delete_application_webhook", {
+            {"application_id", applicationId},
+            {"webhook_id",     webhookId}
     });
 }
 
