@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(kauth-dashboard)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CPR_ENABLE_SSL OFF)
 
 if (WIN32)
@@ -9,13 +10,15 @@ if (WIN32)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 endif ()
 
-add_executable(kauth-dashboard
-        src/main.cpp src/api/models/Application.cpp
+add_executable(kauth-dashboard src/main.cpp
+        src/api/models/Application.cpp
         src/api/models/ApplicationUser.cpp
         src/api/models/Application.h
         src/api/models/ApplicationUser.h
         src/api/models/ApplicationWebhook.h
         src/api/models/ApplicationWebhook.cpp
+        src/api/models/ApplicationFile.h
+        src/api/models/ApplicationFile.cpp
         src/api/Api.h src/api/Api.cpp)
 
 include(FetchContent)

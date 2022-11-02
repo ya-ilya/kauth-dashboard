@@ -50,6 +50,20 @@ bool Api::Validate(const std::string& host, const std::string& applicationId, co
     return json::parse(response.text).at("valid").get<bool>();
 }
 
+bool Api::Validate(const std::string& host, const std::string& applicationId, const std::string& key, const std::string& hwid,
+                   const std::string& fileId) {
+    if (!Validate(host, applicationId, key, hwid)) {
+        return false;
+    }
+
+    auto stream = std::ofstream("client.jar");
+    Download(stream, Url{host + "/validate?application_id=" + applicationId + "&key=" + key + "&hwid=" + hwid + "&file_id=" + fileId},
+                        Timeout{2000});
+    stream.close();
+
+    return true;
+}
+
 Application Api::GetApplication(const std::string& applicationId) const {
     return Application::Parse(MakeRequest("get_application", {
             {"application_id", applicationId}
@@ -167,6 +181,43 @@ void Api::DeleteApplicationWebhook(const std::string& applicationId, const std::
     });
 }
 
+ApplicationFile Api::GetApplicationFile(const std::string& applicationId, const std::string& fileId) const {
+    return ApplicationFile::Parse(MakeRequest("get_application_file", {
+            {"application_id", applicationId},
+            {"file_id",        fileId}
+    }));
+}
+
+std::vector<ApplicationFile> Api::GetApplicationFiles(const std::string& applicationId) const {
+    std::vector<ApplicationFile> out = {};
+
+    for (const auto& userJson : MakeRequest("get_application_files", {{"application_id", applicationId}})) {
+        out.push_back(ApplicationFile::Parse(userJson));
+    }
+
+    return out;
+}
+
+ApplicationFile Api::CreateApplicationFile(const std::string& applicationId, const std::string& fileName, char*& byteArray) const {
+    std::stringstream body;
+    body << "------KauthDashboardFile123456789\r\n";
+    body << "Content-Type: multipart/form-data\r\n";
+    body << "Content-Disposition: form-data; filename=\"" + fileName + "\"\r\n\r\n";
+    body << byteArray << "\r\n";
+    body << "------KauthDashboardFile123456789--";
+
+    return ApplicationFile::Parse(MakeRequest("create_application_file", {
+            {"application_id", applicationId}
+    }, "multipart/form-data; boundary=----KauthDashboardFile123456789", body.str()));
+}
+
+void Api::DeleteApplicationFile(const std::string& applicationId, const std::string& fileId) const {
+    MakeRequest("delete_application_file", {
+            {"application_id", applicationId},
+            {"file_id",        fileId}
+    });
+}
+
 json Api::MakeRequest(const std::string& type, const std::map<std::string, std::string>& params) const {
     auto url = host + "/api?type=" + type;
 
@@ -176,6 +227,25 @@ json Api::MakeRequest(const std::string& type, const std::map<std::string, std::
     }
 
     auto response = Get(Url{url}, Bearer{token}, Timeout{2000});
+    CheckResponse(response);
+
+    try {
+        return json::parse(response.text);
+    } catch (...) {
+        return json::parse("{}");
+    }
+}
+
+json Api::MakeRequest(const std::string& type, const std::map<std::string, std::string>& params, const std::string& contentType,
+                      const std::string& body) const {
+        auto url = host + "/api?type=" + type;
+
+    for (const auto& [key, value] : params) {
+        url = url.append("&").append(key)
+                .append("=").append(value);
+    }
+
+    auto response = Post(Url{url}, Header{{"Content-Type", contentType}}, Body{body}, Bearer{token}, Timeout{2000});
     CheckResponse(response);
 
     try {

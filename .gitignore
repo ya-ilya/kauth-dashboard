@@ -5,6 +5,7 @@
 .cmake
 Testing
 cmake-build-debug
+compile_commands.json
 CMakeFiles
 _CPack_Packages
 CMakeCache.txt
@@ -25,5 +26,7 @@ hs_err_*.log
 *.dll
 *.pc
 *.pc.in
+*.deb
+*.zip
+.cache
 kauth-dashboard
-kauth-dashboard-0.1-Linux.deb

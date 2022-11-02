@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <libcli/libcli.h>
 #include "api/Api.h"
@@ -30,7 +31,7 @@ int main() {
             return;
         }
 
-        for (const auto& user : api.GetApplicationUsers(application_id)) {
+        for (const auto& user : users) {
             std::cout << "----------------------------" << std::endl;
             std::cout << "User ID: " << user.id << std::endl;
             std::cout << "User Key: " << user.key << std::endl;
@@ -72,7 +73,7 @@ int main() {
         try {
             api.DeleteApplicationUser(application_id, args[0]);
 
-            std::cout << "User" << args[0] << " was deleted" << std::endl;
+            std::cout << "User " << args[0] << " was deleted" << std::endl;
         } catch (const ApiException& ex) {
             std::cout << "User not found" << std::endl;
         }
@@ -86,7 +87,7 @@ int main() {
             return;
         }
 
-        for (const auto& webhook : api.GetApplicationWebhooks(application_id)) {
+        for (const auto& webhook : webhooks) {
             std::cout << "----------------------------" << std::endl;
             std::cout << "Webhook ID: " << webhook.id << std::endl;
             std::cout << "Webhook Trigger: " << webhook.trigger << std::endl;
@@ -128,11 +129,64 @@ int main() {
         try {
             api.DeleteApplicationWebhook(application_id, args[0]);
 
-            std::cout << "Webhook" << args[0] << " was deleted" << std::endl;
+            std::cout << "Webhook " << args[0] << " was deleted" << std::endl;
         } catch (const ApiException& ex) {
             std::cout << "Webhook not found" << std::endl;
         }
     });
+
+    application.AddCommand("getfiles", "", "List of application files", [&api, &application_id](const auto& args) {
+        const auto files = api.GetApplicationFiles(application_id);
+
+        if (files.empty()) {
+            std::cout << "Application doesn't have files" << std::endl;
+            return;
+        }
+
+        for (const auto& file : files) {
+            std::cout << "----------------------------" << std::endl;
+            std::cout << "File ID: " << file.id << std::endl;
+            std::cout << "File Name: " << file.fileName << std::endl;
+            std::cout << "----------------------------" << std::endl;
+        }
+    });
+
+    application.AddCommand("getfile", "<file_id>", "Get file by it's id", [&api, &application_id](const auto& args) {
+        try {
+            const auto& file = api.GetApplicationFile(application_id, args[0]);
+
+            std::cout << "----------------------------" << std::endl;
+            std::cout << "File ID: " << file.id << std::endl;
+            std::cout << "File Name: " << file.fileName << std::endl;
+            std::cout << "----------------------------" << std::endl;
+        } catch (const ApiException& ex) {
+            std::cout << "File not found" << std::endl;
+        }
+    });
+
+    application.AddCommand("createfile", "<fileName> <path>", "Create file", [&api, &application_id](const auto& args) {
+        std::ifstream stream(args[0]); 
+        stream.seekg(0, stream.end);
+        long size = stream.tellg();
+        stream.seekg(0);
+        char* byteArray = new char[size];
+        stream.read(byteArray, size);
+        stream.close();
+        const auto& file = api.CreateApplicationFile(application_id, args[0], byteArray);
+
+        std::cout << "File with name " << file.fileName << " created. ID: " << file.id << std::endl;
+    });
+
+    application.AddCommand("deletefile", "<file_id>", "Delete file by it's id", [&api, &application_id](const auto& args) {
+        try {
+            api.DeleteApplicationFile(application_id, args[0]);
+
+            std::cout << "File " << args[0] << " was deleted" << std::endl;
+        } catch (const ApiException& ex) {
+            std::cout << "File not found" << std::endl;
+        }
+    });
+
 
     application.AddCommand("account", "", "Back to account", [&cli](const auto& args) {
         cli.SelectMenu("account");
@@ -221,8 +275,12 @@ int main() {
         cli.SelectMenu("account");
     });
 
-    root.AddCommand("validate", "<host> <application_id> <key> <hwid>", "Validate application user", [](const auto& args) {
-        std::cout << "Validate Result: " << Api::Validate(args[0], args[1], args[2], args[3]) << std::endl;
+    root.AddCommand("validate", "<host> <application_id> <key> <hwid> <file_id>", "Validate application user", [](const auto& args) {
+        if (args.size() < 5) {
+            std::cout << "Validate Result: " << Api::Validate(args[0], args[1], args[2], args[3]) << std::endl;
+        } else {
+            std::cout << "Validate Result: " << Api::Validate(args[0], args[1], args[2], args[3], args[4]) << std::endl;
+        }
     });
     /** END ROOT **/
 
